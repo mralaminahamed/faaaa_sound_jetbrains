@@ -1,15 +1,30 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>com.github.mralaminahamed.faaaasoundjetbrains</id>
-    <name>faaaa_sound_jetbrains</name>
-    <vendor>mralaminahamed</vendor>
+    <id>org.jetbrains.plugins.faasasound</id>
+    <name>Faaaa Sound</name>
+    <vendor>morshedulmunna</vendor>
+    <description>Play a dramatic Faaaaaaah sound when tests fail.</description>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.execution</depends>
 
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.mralaminahamed.faaaasoundjetbrains.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-        <postStartupActivity implementation="com.github.mralaminahamed.faaaasoundjetbrains.startup.MyProjectActivity" />
     </extensions>
+
+    <actions>
+        <action id="faaaaSound.PlayNow" class="org.jetbrains.plugins.faasasound.actions.PlaySoundAction"
+                text="Faaaa Sound: Play Now" description="Play the Faaaa sound">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+        <action id="faaaaSound.SelfTest" class="org.jetbrains.plugins.faasasound.actions.SelfTestAction"
+                text="Faaaa Sound: Self Test" description="Test the extension">
+        </action>
+    </actions>
+
+    <projectListeners>
+        <listener class="org.jetbrains.plugins.faasasound.listeners.TestTaskListener"
+                  topic="com.intellij.execution.ExecutionListener"/>
+    </projectListeners>
 </idea-plugin>
