@@ -1,5 +1,5 @@
+rootProject.name = "Faaaa Sound"
+
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
-
-rootProject.name = "faaaa_sound_jetbrains"
