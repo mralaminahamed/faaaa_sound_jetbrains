@@ -7,6 +7,7 @@ import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.StartupActivity
+import org.jetbrains.plugins.faasasound.settings.AppSettings
 import org.jetbrains.plugins.faasasound.util.SoundPlayer
 
 class TestTaskListener : StartupActivity.DumbAware {
@@ -21,10 +22,22 @@ class TestTaskListener : StartupActivity.DumbAware {
             }
 
             override fun processTerminated(executorId: String, environment: ExecutionEnvironment, handler: ProcessHandler, exitCode: Int) {
+                val settings = AppSettings.getInstance()
+                if (!settings.enabled) {
+                    return
+                }
+
                 val isTest = environment.runProfile.name.contains("Test", ignoreCase = true)
-                if (isTest && exitCode != 0) {
+                if (settings.onTestFailure && isTest && exitCode != 0) {
                     LOG.info("Test failed with exit code: $exitCode, configuration: ${environment.runProfile.name}")
-                    SoundPlayer.playSound(null)
+                    val soundPath = settings.soundFilePath.ifEmpty { null }
+                    SoundPlayer.playSound(
+                        soundFilePath = soundPath,
+                        cooldownMs = settings.cooldownMs.toLong(),
+                        customPhrase = settings.customPhrase,
+                        readError = settings.readErrorMessage,
+                        errorMessage = null
+                    )
                 }
             }
         })

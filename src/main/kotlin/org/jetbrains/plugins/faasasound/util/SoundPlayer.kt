@@ -17,7 +17,7 @@ object SoundPlayer {
         lastPlayedAt = 0L
     }
 
-    fun playSound(soundFilePath: String?, cooldownMs: Long = 2500): Boolean {
+    fun playSound(soundFilePath: String?, cooldownMs: Long = 2500, customPhrase: String = "Faaaaaaah", readError: Boolean = false, errorMessage: String? = null): Boolean {
         return lock.withLock {
             val now = System.currentTimeMillis()
             if (now - lastPlayedAt < cooldownMs) {
@@ -26,26 +26,31 @@ object SoundPlayer {
             }
             lastPlayedAt = now
 
+            if (readError && errorMessage != null) {
+                LOG.info("Reading error message before sound: $errorMessage")
+                speak(errorMessage, customPhrase)
+            }
+
             val filePath = soundFilePath ?: getDefaultSoundPath()
             val file = File(filePath)
 
             if (!file.exists()) {
                 LOG.warn("Sound file not found: $filePath, falling back to speech")
-                speak("Faaaaaaah")
+                speak(customPhrase)
                 return@withLock false
             }
 
             val success = playAudioFile(file)
             if (!success) {
                 LOG.info("Audio file playback failed, falling back to speech")
-                speak("Faaaaaaah")
+                speak(customPhrase)
             }
             return@withLock success
         }
     }
 
-    fun speak(text: String) {
-        val sanitized = sanitizeText(text)
+    fun speak(text: String, customPhrase: String = "Faaaaaaah") {
+        val sanitized = sanitizeText(text.ifEmpty { customPhrase })
         val command = when {
             SystemInfo.isMac -> listOf("say", sanitized)
             SystemInfo.isWindows -> listOf("powershell", "-Command", 

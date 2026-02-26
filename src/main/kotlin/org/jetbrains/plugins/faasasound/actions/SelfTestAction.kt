@@ -4,6 +4,7 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.ui.Messages
+import org.jetbrains.plugins.faasasound.settings.AppSettings
 import org.jetbrains.plugins.faasasound.util.SoundPlayer
 
 class SelfTestAction : AnAction() {
@@ -11,7 +12,15 @@ class SelfTestAction : AnAction() {
 
     override fun actionPerformed(e: AnActionEvent) {
         LOG.info("Self test triggered")
-        val played = SoundPlayer.playSound(null, 0)
+        val settings = AppSettings.getInstance()
+        val soundPath = settings.soundFilePath.ifEmpty { null }
+        val played = SoundPlayer.playSound(
+            soundFilePath = soundPath,
+            cooldownMs = 0,
+            customPhrase = settings.customPhrase,
+            readError = false,
+            errorMessage = null
+        )
         val message = if (played) "Audio file played" else "Fallback speech used"
         Messages.showInfoMessage(message, "Faaaa Sound Self Test")
     }
