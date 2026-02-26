@@ -6,6 +6,7 @@
 
 ### Added
 
+- Add settings page with configurable options (enable/disable, cooldown, custom phrase, sound file)
 - Add unit tests for `SoundPlayer`
 
 ### Fixed

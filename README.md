@@ -9,11 +9,26 @@
 - Plays `faaah.mp3` when test runs report failing tests
 - Falls back to speech synthesis if audio playback fails
 - Manual trigger via Tools menu
+- Configurable settings
 
 ## Commands
 
 - **Tools > Faaaa Sound: Play Now** - Manually trigger the sound
 - **Tools > Faaaa Sound: Self Test** - Test the extension
+
+## Settings
+
+Configure the plugin via **Settings > Tools > Faaaa Sound**:
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| Enable Faaaa Sound plugin | Enable/disable the plugin | Enabled |
+| Play sound when tests fail | Play sound when test runs fail | Enabled |
+| Play sound on new errors | Play sound when new errors are detected | Disabled |
+| Read error message before playing sound | Speak the error message before playing the sound | Disabled |
+| Cooldown (ms) | Minimum time between sound plays | 2500 |
+| Custom phrase | Custom phrase to speak (max 300 chars) | Faaaaaaah |
+| Sound file | Custom sound file path (mp3/wav) | (bundled) |
 
 ## Platform Notes
 
